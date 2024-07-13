@@ -310,7 +310,8 @@ class _LoginPageState extends State<LoginPage> {
     final GoogleSignIn googleSignIn = GoogleSignIn();
     try {
       // start the Google Signin in process
-      GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
+      final GoogleSignInAccount? googleSignInAccount =
+          await googleSignIn.signIn();
       //check if the sign-in was successful
       if (googleSignInAccount != null) {
         // get the google authentification detail
@@ -340,9 +341,21 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             (route) => false);
+
+        final FirebaseFirestore firestore = FirebaseFirestore.instance;
+        final DocumentReference userRef =
+            firestore.collection("users").doc(user?.uid);
+        if (user != null) {
+          await userRef.set({
+            'username': user.displayName,
+            'email': user.email,
+            'password': null,
+            "token": user.uid,
+          });
+        }
       }
     } catch (e) {
-      showToast(message: "Sorry error has occured $e");
+      showToast(message: "$e ");
     }
   }
 }

@@ -209,7 +209,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
     User? user = await _auth.signUpWithEmailAndPassword(email, password);
     final DocumentReference userRef =
-        firestore.collection("users").doc("profiles");
+        firestore.collection("users").doc(user?.uid);
 
     if (user != null) {
       await storage.write(key: 'login_token', value: user.uid);

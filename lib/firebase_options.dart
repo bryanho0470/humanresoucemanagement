@@ -27,10 +27,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -44,37 +41,47 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDx6SsnLb4XiNsbYIyBalajf_RP-Xn50Js',
-    appId: '1:424948448958:web:8e2dba1be08498162f68ef',
-    messagingSenderId: '424948448958',
-    projectId: 'hr-management-dbe1c',
-    authDomain: 'hr-management-dbe1c.firebaseapp.com',
-    storageBucket: 'hr-management-dbe1c.appspot.com',
+    apiKey: 'AIzaSyCIzA5bD0huEBYqy4iu54kh_C5uuzRAUTo',
+    appId: '1:571209457708:web:58f65963310057e554f189',
+    messagingSenderId: '571209457708',
+    projectId: 'hr-managemenrt-429311',
+    authDomain: 'hr-managemenrt-429311.firebaseapp.com',
+    storageBucket: 'hr-managemenrt-429311.appspot.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDwR9cCuOgUZz0jU3tPIKe07oT7T-PDgtA',
-    appId: '1:424948448958:android:ea110bd5bd73a8e62f68ef',
-    messagingSenderId: '424948448958',
-    projectId: 'hr-management-dbe1c',
-    storageBucket: 'hr-management-dbe1c.appspot.com',
+    apiKey: 'AIzaSyCDH1usNAZ9bImdz4HXhtzBfcDXJk8tZJY',
+    appId: '1:571209457708:android:71a845f3b040a4ff54f189',
+    messagingSenderId: '571209457708',
+    projectId: 'hr-managemenrt-429311',
+    storageBucket: 'hr-managemenrt-429311.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDKQGYjR4Ws9oYeB_5DJu7CUWCPC0mcoUg',
-    appId: '1:424948448958:ios:55275b1585b44ac42f68ef',
-    messagingSenderId: '424948448958',
-    projectId: 'hr-management-dbe1c',
-    storageBucket: 'hr-management-dbe1c.appspot.com',
+    apiKey: 'AIzaSyA0UizMf2ZPSNHt1SytVdT8Gu4jHSwUGU4',
+    appId: '1:571209457708:ios:15a13ee51b80567154f189',
+    messagingSenderId: '571209457708',
+    projectId: 'hr-managemenrt-429311',
+    storageBucket: 'hr-managemenrt-429311.appspot.com',
     iosBundleId: 'com.example.humanresoucemanagement',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDKQGYjR4Ws9oYeB_5DJu7CUWCPC0mcoUg',
-    appId: '1:424948448958:ios:3436179316736ad42f68ef',
-    messagingSenderId: '424948448958',
-    projectId: 'hr-management-dbe1c',
-    storageBucket: 'hr-management-dbe1c.appspot.com',
-    iosBundleId: 'com.example.humanresoucemanagement.RunnerTests',
+    apiKey: 'AIzaSyA0UizMf2ZPSNHt1SytVdT8Gu4jHSwUGU4',
+    appId: '1:571209457708:ios:15a13ee51b80567154f189',
+    messagingSenderId: '571209457708',
+    projectId: 'hr-managemenrt-429311',
+    storageBucket: 'hr-managemenrt-429311.appspot.com',
+    iosBundleId: 'com.example.humanresoucemanagement',
   );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyCIzA5bD0huEBYqy4iu54kh_C5uuzRAUTo',
+    appId: '1:571209457708:web:fd0261faaaeaa96254f189',
+    messagingSenderId: '571209457708',
+    projectId: 'hr-managemenrt-429311',
+    authDomain: 'hr-managemenrt-429311.firebaseapp.com',
+    storageBucket: 'hr-managemenrt-429311.appspot.com',
+  );
+
 }

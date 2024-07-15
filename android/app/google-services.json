@@ -12,7 +12,12 @@
           "package_name": "com.example.humanresoucemanagement"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "571209457708-4jaa9j0d27juias9tp1064l8udevcpek.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCDH1usNAZ9bImdz4HXhtzBfcDXJk8tZJY"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "571209457708-4jaa9j0d27juias9tp1064l8udevcpek.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "571209457708-6tglt6qmh4t5bofhbvgfdtgoi53uplge.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.humanresoucemanagement"
+              }
+            }
+          ]
         }
       }
     }

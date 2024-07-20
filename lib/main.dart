@@ -20,6 +20,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        primaryColor: const Color(0xff0179bd),
+        secondaryHeaderColor: const Color(0xff85D5FF),
+      ),
       debugShowCheckedModeBanner: false,
       title: "Shake Your Skills",
       initialRoute: "/",

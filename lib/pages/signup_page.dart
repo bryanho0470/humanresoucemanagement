@@ -86,7 +86,7 @@ class _SignUpPageState extends State<SignUpPage> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          backgroundColor: Colors.amber,
+          backgroundColor: const Color(0xff0179bd),
         ),
         body: Center(
           child: Padding(

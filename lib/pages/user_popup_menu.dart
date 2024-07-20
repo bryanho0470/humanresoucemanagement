@@ -30,16 +30,24 @@ class _UserPopupMenuState extends State<UserPopupMenu> {
   }
 
   Future<void> showSignOutAlert(BuildContext context) async {
+    final popupBGcolor = Theme.of(context).secondaryHeaderColor;
     return showDialog<void>(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
+            backgroundColor: popupBGcolor,
             title: const Text("Sign out!"),
             content: const Text("Do you really want to Sign out?"),
             actions: <Widget>[
               TextButton(
-                child: const Text("Cancel"),
+                child: const Text(
+                  "Cancel",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 onPressed: () {
                   Navigator.pop(context);
                 },
@@ -49,7 +57,13 @@ class _UserPopupMenuState extends State<UserPopupMenu> {
                   await signOut();
                   moveToLogin();
                 },
-                child: const Text("Sign out"),
+                child: const Text(
+                  "Sign out",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               )
             ],
           );
@@ -58,9 +72,11 @@ class _UserPopupMenuState extends State<UserPopupMenu> {
 
   @override
   Widget build(BuildContext context) {
+    final color = Theme.of(context).secondaryHeaderColor;
     return PopupMenuButton<UserMenuItems>(
       iconSize: 35,
       icon: const Icon(Icons.person),
+      color: color,
       onSelected: (UserMenuItems item) {
         setState(
           () {

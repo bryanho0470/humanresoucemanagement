@@ -7,6 +7,7 @@ import 'package:humanresoucemanagement/pages/notification_summary.dart';
 import 'package:humanresoucemanagement/pages/sharing_page.dart';
 import 'package:humanresoucemanagement/pages/test.dart';
 import 'package:humanresoucemanagement/pages/user_popup_menu.dart';
+import 'package:humanresoucemanagement/styles/style.dart';
 import 'package:humanresoucemanagement/widgets/add_todo_button.dart';
 
 class LandingPage extends StatefulWidget {
@@ -118,7 +119,31 @@ class _LandingScreenState extends State<LandingPage> {
         ),
         // End of appbar
 
-        body: pageList[currentPageIndex],
+        body: Stack(
+          children: [
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    AppColors.backgroundFadedColor,
+                    AppColors.backgroundColor,
+                  ],
+                  stops: [0.0, 1],
+                ),
+              ),
+            ),
+            const SafeArea(
+              child: Text("Test"),
+            ),
+            const Align(
+              alignment: Alignment.bottomCenter,
+              child: AddTodoButton(),
+            ),
+            pageList[currentPageIndex],
+          ],
+        ),
         bottomNavigationBar: BottomAppBar(
           notchMargin: 5,
           color: const Color(0xffedf3fc),
@@ -161,41 +186,6 @@ class _LandingScreenState extends State<LandingPage> {
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton.large(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(50.0),
-          ),
-          backgroundColor: color,
-          onPressed: () {
-            showBottomSheet(
-              context: context,
-              builder: (BuildContext context) {
-                return Wrap(
-                  children: <Widget>[
-                    const SizedBox(height: 20.0),
-                    ListTile(
-                      leading: const Hero(
-                        tag: 'hero-rectangle',
-                        child: BoxWidget(size: Size(50.0, 50.0)),
-                      ),
-                      onTap: () {
-                        Navigator.of(context)
-                            .push(HeroDialogRoute(builder: (context) {
-                          return const AddTodoButton();
-                        }));
-                      },
-                      title: const Text(
-                        'Tap on the icon to view hero animation transition.',
-                      ),
-                    ),
-                  ],
-                );
-              },
-            );
-          },
-          child: const Icon(Icons.local_activity),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );
   }

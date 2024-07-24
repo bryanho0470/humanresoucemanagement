@@ -11,27 +11,25 @@ class AddTodoButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(32.0),
-      child: Scaffold(
-        body: GestureDetector(
-          onTap: () {
-            Navigator.of(context).push(HeroDialogRoute(builder: (context) {
-              return const _AddTodoPopupCard();
-            }));
+      child: GestureDetector(
+        onTap: () {
+          Navigator.of(context).push(HeroDialogRoute(builder: (context) {
+            return const _AddTodoPopupCard();
+          }));
+        },
+        child: Hero(
+          tag: _heroAddTodo,
+          createRectTween: (begin, end) {
+            return CustomRectTween(begin: begin, end: end);
           },
-          child: Hero(
-            tag: _heroAddTodo,
-            createRectTween: (begin, end) {
-              return CustomRectTween(begin: begin, end: end);
-            },
-            child: Material(
-              color: AppColors.accentColor,
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(32)),
-              child: const Icon(
-                Icons.add_rounded,
-                size: 56,
-              ),
+          child: Material(
+            color: AppColors.accentColor,
+            elevation: 2,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+            child: const Icon(
+              Icons.add_rounded,
+              size: 56,
             ),
           ),
         ),

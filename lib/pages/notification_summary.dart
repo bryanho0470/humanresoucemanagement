@@ -22,9 +22,11 @@ class _NotificationSummaryState extends State<NotificationSummary> {
 
   @override
   Widget build(BuildContext context) {
+    final color = Theme.of(context).secondaryHeaderColor;
     return PopupMenuButton<NotificationItems>(
       iconSize: 35,
       icon: const Icon(Icons.notifications),
+      color: color,
       initialValue: selectedItem,
       onSelected: (NotificationItems item) {
         setState(

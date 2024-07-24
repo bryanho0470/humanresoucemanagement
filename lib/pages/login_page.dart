@@ -68,6 +68,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final color = Theme.of(context).primaryColor;
+
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) {
@@ -79,18 +81,17 @@ class _LoginPageState extends State<LoginPage> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text(
-            "Welcome to NK skill share programe",
+            "Welcome to NK Culture",
             style: TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
           ),
           elevation: 3, // no shadow
           flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [Color(0xFF8e03c0), Color(0xFFf001c6)],
-              ),
+            decoration: BoxDecoration(
+              color: color,
             ),
           ),
           shadowColor: Colors.black, // light shadow
@@ -125,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
                   height: 30,
                 ),
                 const Text(
-                  "さあ、みんなで成長しましょう",
+                  "みんなで作るNK文化",
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -196,14 +197,7 @@ class _LoginPageState extends State<LoginPage> {
                     width: double.infinity,
                     height: 45,
                     decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                        colors: [
-                          Color(0xFF8e03c0),
-                          Color(0xFFf001c6),
-                        ],
-                      ),
+                      color: color,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Center(
@@ -247,10 +241,10 @@ class _LoginPageState extends State<LoginPage> {
                           (route) => false,
                         );
                       },
-                      child: const Text(
+                      child: Text(
                         "Sign Up",
                         style: TextStyle(
-                          color: Color.fromARGB(255, 199, 93, 218),
+                          color: color,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -270,8 +264,8 @@ class _LoginPageState extends State<LoginPage> {
       _isSigning = true;
     });
 
-    String email = _emailController.text;
-    String password = _passwordController.text;
+    String email = "park@gmail.com"; // _emailController.text;
+    String password = "hoho0470"; // _passwordController.text;
 
     try {
       User? user = await _auth.signInWithEmailAndPassword(email, password);

@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:humanresoucemanagement/pages/chat_page.dart';
-import 'package:humanresoucemanagement/pages/exam_page.dart';
-import 'package:humanresoucemanagement/pages/home_page.dart';
-import 'package:humanresoucemanagement/pages/message_page.dart';
-import 'package:humanresoucemanagement/pages/myaccount_page.dart';
+import 'package:humanresoucemanagement/global/common/hero_dialog_route.dart';
+import 'package:humanresoucemanagement/pages/dashboard_page.dart';
 import 'package:humanresoucemanagement/pages/notification_summary.dart';
+import 'package:humanresoucemanagement/pages/sharing_page.dart';
+import 'package:humanresoucemanagement/pages/test.dart';
 import 'package:humanresoucemanagement/pages/user_popup_menu.dart';
+import 'package:humanresoucemanagement/widgets/add_todo_button.dart';
 
 class LandingPage extends StatefulWidget {
   final String? username;
@@ -28,11 +28,8 @@ class _LandingScreenState extends State<LandingPage> {
   int currentPageIndex = 0;
 
   final List<Widget> pageList = <Widget>[
-    const HomePage(),
-    const ExamPage(),
-    const MessagePage(),
-    const ChatPage(),
-    const MyAccountPage(),
+    const SharingPage(),
+    const DashboardPage(),
   ];
 
   void _exitAppDialog() {
@@ -68,6 +65,9 @@ class _LandingScreenState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
     String username = (widget.username?.toString() ?? "no token");
+    final color = Theme.of(context).primaryColor;
+    // final ColorScheme colorScheme = Theme.of(context).colorScheme;
+
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) {
@@ -79,7 +79,7 @@ class _LandingScreenState extends State<LandingPage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            "Welcome ${username.toUpperCase()}",
+            "Welcome \n ${username.toUpperCase()}",
             style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
@@ -87,12 +87,8 @@ class _LandingScreenState extends State<LandingPage> {
           ),
           elevation: 3, // no shadow
           flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [Color(0xFF8e03c0), Color(0xFFf001c6)],
-              ),
+            decoration: BoxDecoration(
+              color: color,
             ),
           ),
           actions: const <Widget>[
@@ -124,88 +120,101 @@ class _LandingScreenState extends State<LandingPage> {
 
         body: pageList[currentPageIndex],
         bottomNavigationBar: BottomAppBar(
+          notchMargin: 5,
+          color: const Color(0xffedf3fc),
           shape: const CircularNotchedRectangle(),
-          notchMargin: 1,
-          child: SizedBox(
-            height: kBottomNavigationBarHeight,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Expanded(
-                  child: NavigationBar(
-                    height: kBottomNavigationBarHeight,
-                    backgroundColor: Colors.transparent,
-                    labelBehavior:
-                        NavigationDestinationLabelBehavior.onlyShowSelected,
-                    animationDuration: Duration.zero,
-                    onDestinationSelected: (int index) {
-                      setState(
-                        () {
-                          currentPageIndex = index;
-                        },
-                      );
-                    },
-                    selectedIndex: currentPageIndex,
-                    destinations: const <NavigationDestination>[
-                      NavigationDestination(
-                        icon: Icon(Icons.home_max_outlined),
-                        label: "home",
-                        selectedIcon: Icon(
-                          Icons.home,
-                        ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Expanded(
+                child: NavigationBar(
+                  height: kBottomNavigationBarHeight,
+                  backgroundColor: Colors.transparent,
+                  labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+                  animationDuration: const Duration(milliseconds: 300),
+                  onDestinationSelected: (int index) {
+                    setState(
+                      () {
+                        currentPageIndex = index;
+                      },
+                    );
+                  },
+                  selectedIndex: currentPageIndex,
+                  destinations: const <NavigationDestination>[
+                    NavigationDestination(
+                      icon: Icon(Icons.fact_check_outlined),
+                      label: "Sharing",
+                      selectedIcon: Icon(
+                        Icons.fact_check,
                       ),
-                      NavigationDestination(
-                        icon: Icon(Icons.book_outlined),
-                        label: "test",
-                        selectedIcon: Icon(
-                          Icons.book,
-                        ),
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.dashboard_outlined),
+                      label: "Dashboard",
+                      selectedIcon: Icon(
+                        Icons.dashboard,
                       ),
-                      NavigationDestination(
-                        icon: Badge(
-                          child: Icon(
-                            Icons.notifications_outlined,
-                          ),
-                        ),
-                        label: "Message",
-                        selectedIcon: Badge(
-                          child: Icon(
-                            Icons.notifications_sharp,
-                          ),
-                        ),
-                      ),
-                      NavigationDestination(
-                        icon: Badge(
-                          label: Text("2"),
-                          child: Icon(
-                            Icons.message_outlined,
-                          ),
-                        ),
-                        label: "Chat",
-                        selectedIcon: Badge(
-                          label: Text("2"),
-                          child: Icon(
-                            Icons.message_sharp,
-                          ),
-                        ),
-                      ),
-                      NavigationDestination(
-                        icon: Icon(
-                          Icons.account_box,
-                        ),
-                        label: "My Account",
-                        selectedIcon: Icon(
-                          Icons.account_box,
-                        ),
-                      )
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
+            ],
+          ),
+        ),
+        floatingActionButton: FloatingActionButton.large(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(50.0),
+          ),
+          backgroundColor: color,
+          onPressed: () {
+            showBottomSheet(
+              context: context,
+              builder: (BuildContext context) {
+                return Wrap(
+                  children: <Widget>[
+                    const SizedBox(height: 20.0),
+                    ListTile(
+                      leading: const Hero(
+                        tag: 'hero-rectangle',
+                        child: BoxWidget(size: Size(50.0, 50.0)),
+                      ),
+                      onTap: () {
+                        Navigator.of(context)
+                            .push(HeroDialogRoute(builder: (context) {
+                          return const AddTodoButton();
+                        }));
+                      },
+                      title: const Text(
+                        'Tap on the icon to view hero animation transition.',
+                      ),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+          child: const Icon(Icons.local_activity),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      ),
+    );
+  }
+
+  void _gotoDetailsPage(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute<void>(
+      builder: (BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text("Second Page"),
+        ),
+        body: const Center(
+          child: Hero(
+            tag: "hero-rectangle",
+            child: BoxWidget(
+              size: Size(200, 200),
             ),
           ),
         ),
       ),
-    );
+    ));
   }
 }

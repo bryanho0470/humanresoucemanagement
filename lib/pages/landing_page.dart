@@ -1,10 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:humanresoucemanagement/global/common/hero_dialog_route.dart';
 import 'package:humanresoucemanagement/pages/dashboard_page.dart';
 import 'package:humanresoucemanagement/pages/notification_summary.dart';
 import 'package:humanresoucemanagement/pages/sharing_page.dart';
+import 'package:humanresoucemanagement/pages/test.dart';
 import 'package:humanresoucemanagement/pages/user_popup_menu.dart';
+import 'package:humanresoucemanagement/widgets/add_todo_button.dart';
 
 class LandingPage extends StatefulWidget {
   final String? username;
@@ -163,15 +166,55 @@ class _LandingScreenState extends State<LandingPage> {
             borderRadius: BorderRadius.circular(50.0),
           ),
           backgroundColor: color,
-          onPressed: null,
-          child: const Icon(
-            Icons.local_activity,
-            color: Colors.white,
-            size: 60,
-          ),
+          onPressed: () {
+            showBottomSheet(
+              context: context,
+              builder: (BuildContext context) {
+                return Wrap(
+                  children: <Widget>[
+                    const SizedBox(height: 20.0),
+                    ListTile(
+                      leading: const Hero(
+                        tag: 'hero-rectangle',
+                        child: BoxWidget(size: Size(50.0, 50.0)),
+                      ),
+                      onTap: () {
+                        Navigator.of(context)
+                            .push(HeroDialogRoute(builder: (context) {
+                          return const AddTodoButton();
+                        }));
+                      },
+                      title: const Text(
+                        'Tap on the icon to view hero animation transition.',
+                      ),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+          child: const Icon(Icons.local_activity),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );
+  }
+
+  void _gotoDetailsPage(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute<void>(
+      builder: (BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text("Second Page"),
+        ),
+        body: const Center(
+          child: Hero(
+            tag: "hero-rectangle",
+            child: BoxWidget(
+              size: Size(200, 200),
+            ),
+          ),
+        ),
+      ),
+    ));
   }
 }

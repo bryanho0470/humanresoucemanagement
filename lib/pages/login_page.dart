@@ -81,9 +81,12 @@ class _LoginPageState extends State<LoginPage> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text(
-            "Welcome to NK skill share programe",
+            "Welcome to NK Culture",
             style: TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
           ),
           elevation: 3, // no shadow
           flexibleSpace: Container(
@@ -123,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
                   height: 30,
                 ),
                 const Text(
-                  "さあ、みんなで成長しましょう",
+                  "みんなで作るNK文化",
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,

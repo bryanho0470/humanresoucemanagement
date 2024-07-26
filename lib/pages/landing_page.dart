@@ -5,7 +5,6 @@ import 'package:humanresoucemanagement/global/common/hero_dialog_route.dart';
 import 'package:humanresoucemanagement/pages/dashboard_page.dart';
 import 'package:humanresoucemanagement/pages/notification_summary.dart';
 import 'package:humanresoucemanagement/pages/sharing_page.dart';
-import 'package:humanresoucemanagement/pages/test.dart';
 import 'package:humanresoucemanagement/pages/user_popup_menu.dart';
 import 'package:humanresoucemanagement/styles/custom_rect_tween.dart';
 import 'package:humanresoucemanagement/styles/style.dart';
@@ -138,15 +137,14 @@ class _LandingScreenState extends State<LandingPage> {
             const SafeArea(
               child: Text("Test"),
             ),
-            const Align(
-              alignment: Alignment.bottomCenter,
-              child: AddTodoButton(),
-            ),
+            // const Align(
+            //   alignment: Alignment.bottomCenter,
+            //   child: AddTodoButton(),
+            // ),
             pageList[currentPageIndex],
           ],
         ),
         bottomNavigationBar: BottomAppBar(
-          notchMargin: 5,
           color: const Color(0xffedf3fc),
           shape: const CircularNotchedRectangle(),
           child: Row(
@@ -168,14 +166,19 @@ class _LandingScreenState extends State<LandingPage> {
                   selectedIndex: currentPageIndex,
                   destinations: const <NavigationDestination>[
                     NavigationDestination(
-                      icon: Icon(Icons.fact_check_outlined),
+                      icon: Icon(
+                        Icons.fact_check_outlined,
+                      ),
                       label: "Sharing",
                       selectedIcon: Icon(
                         Icons.fact_check,
                       ),
                     ),
+                    // NavigationDestination(icon: AddTodoButton(), label: ''),
                     NavigationDestination(
-                      icon: Icon(Icons.dashboard_outlined),
+                      icon: Icon(
+                        Icons.dashboard_outlined,
+                      ),
                       label: "Dashboard",
                       selectedIcon: Icon(
                         Icons.dashboard,
@@ -187,46 +190,43 @@ class _LandingScreenState extends State<LandingPage> {
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context).push(
-              HeroDialogRoute(
-                builder: (BuildContext context) {
-                  return const _AddTodoPopupCard();
-                },
-              ),
-            );
-          },
-          child: const Icon(Icons.add),
+        floatingActionButton: SizedBox(
+          height: 80,
+          width: 80,
+          child: FloatingActionButton(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+            heroTag: _heroAddTodo,
+            splashColor: AppColors.nkColortrans,
+            backgroundColor: AppColors.nkColor,
+            foregroundColor: Colors.white,
+            onPressed: () {
+              Navigator.of(context)
+                  .push(HeroDialogRoute(builder: (BuildContext context) {
+                return const _AddTodoPopupCard();
+              }));
+            },
+            // onPressed: () {
+            //   Navigator.of(context).push(
+            //     HeroDialogRoute(
+            //       builder: (BuildContext context) {
+            //         return const AddTodoButton();
+            //       },
+            //     ),
+            //   );
+
+            child: const Icon(Icons.local_activity),
+          ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );
   }
-
-  void _gotoDetailsPage(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute<void>(
-      builder: (BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text("Second Page"),
-        ),
-        body: const Center(
-          child: Hero(
-            tag: "hero-rectangle",
-            child: BoxWidget(
-              size: Size(200, 200),
-            ),
-          ),
-        ),
-      ),
-    ));
-  }
 }
 
-const String _heroAddTodo = 'add-todo-hero';
+const String _heroAddTodo = "add-todo-hero";
 
 class _AddTodoPopupCard extends StatelessWidget {
-  /// {@macro add_todo_popup_card}
   const _AddTodoPopupCard({super.key});
 
   @override
@@ -240,43 +240,62 @@ class _AddTodoPopupCard extends StatelessWidget {
             return CustomRectTween(begin: begin, end: end);
           },
           child: Material(
-            color: AppColors.accentColor,
+            color: AppColors.nkColortrans,
             elevation: 2,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
             child: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(16),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const TextField(
                       decoration: InputDecoration(
-                        hintText: 'New todo',
+                        hintText: "New todo",
+                        hintStyle: TextStyle(
+                          color: Colors.white,
+                        ),
                         border: InputBorder.none,
+                        fillColor: Colors.white,
                       ),
                       cursorColor: Colors.white,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
                     ),
                     const Divider(
                       color: Colors.white,
-                      thickness: 0.2,
+                      thickness: 1,
                     ),
                     const TextField(
                       decoration: InputDecoration(
-                        hintText: 'Write a note',
+                        hintText: "write a note",
+                        hintStyle: TextStyle(
+                          color: Colors.white,
+                        ),
                         border: InputBorder.none,
+                      ),
+                      style: TextStyle(
+                        color: Colors.white,
                       ),
                       cursorColor: Colors.white,
                       maxLines: 6,
                     ),
                     const Divider(
                       color: Colors.white,
-                      thickness: 0.2,
+                      thickness: 1,
                     ),
                     TextButton(
                       onPressed: () {},
-                      child: const Text('Add'),
-                    ),
+                      child: const Text(
+                        'ADD Question',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),

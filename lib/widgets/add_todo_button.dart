@@ -10,7 +10,7 @@ class AddTodoButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(32.0),
+      padding: const EdgeInsets.all(1.0),
       child: GestureDetector(
         onTap: () {
           Navigator.of(context).push(HeroDialogRoute(builder: (context) {
@@ -23,12 +23,13 @@ class AddTodoButton extends StatelessWidget {
             return CustomRectTween(begin: begin, end: end);
           },
           child: Material(
-            color: AppColors.accentColor,
+            color: AppColors.nkColor,
             elevation: 2,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
             child: const Icon(
-              Icons.add_rounded,
+              color: Colors.white,
+              Icons.local_activity,
               size: 56,
             ),
           ),
@@ -56,53 +57,73 @@ class _AddTodoPopupCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(32.0),
         child: Hero(
-            tag: _heroAddTodo,
-            createRectTween: (begin, end) {
-              return CustomRectTween(begin: begin, end: end);
-            },
-            child: Material(
-              color: AppColors.accentColor,
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(32)),
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const TextField(
-                        decoration: InputDecoration(
-                          hintText: "New todo",
-                          border: InputBorder.none,
+          tag: _heroAddTodo,
+          createRectTween: (begin, end) {
+            return CustomRectTween(begin: begin, end: end);
+          },
+          child: Material(
+            color: AppColors.nkColortrans,
+            elevation: 2,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const TextField(
+                      decoration: InputDecoration(
+                        hintText: "New todo",
+                        hintStyle: TextStyle(
+                          color: Colors.white,
                         ),
-                        cursorColor: Colors.white,
+                        border: InputBorder.none,
+                        fillColor: Colors.white,
                       ),
-                      const Divider(
+                      cursorColor: Colors.white,
+                      style: TextStyle(
                         color: Colors.white,
-                        thickness: 0.2,
                       ),
-                      const TextField(
-                        decoration: InputDecoration(
-                          hintText: "write a note",
-                          border: InputBorder.none,
+                    ),
+                    const Divider(
+                      color: Colors.white,
+                      thickness: 1,
+                    ),
+                    const TextField(
+                      decoration: InputDecoration(
+                        hintText: "write a note",
+                        hintStyle: TextStyle(
+                          color: Colors.white,
                         ),
-                        cursorColor: Colors.white,
-                        maxLines: 6,
+                        border: InputBorder.none,
                       ),
-                      const Divider(
+                      style: TextStyle(
                         color: Colors.white,
-                        thickness: 0.2,
                       ),
-                      TextButton(
-                        onPressed: () {},
-                        child: const Text('ADD'),
-                      )
-                    ],
-                  ),
+                      cursorColor: Colors.white,
+                      maxLines: 6,
+                    ),
+                    const Divider(
+                      color: Colors.white,
+                      thickness: 1,
+                    ),
+                    TextButton(
+                      onPressed: () {},
+                      child: const Text(
+                        'ADD Question',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               ),
-            )),
+            ),
+          ),
+        ),
       ),
     );
   }

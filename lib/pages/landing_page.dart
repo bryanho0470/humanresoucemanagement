@@ -145,7 +145,9 @@ class _LandingScreenState extends State<LandingPage> {
           ],
         ),
         bottomNavigationBar: BottomAppBar(
-          color: const Color(0xffedf3fc),
+          height: 80,
+          notchMargin: 10,
+          color: Colors.white,
           shape: const CircularNotchedRectangle(),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

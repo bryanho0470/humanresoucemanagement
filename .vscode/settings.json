@@ -1,2 +1,6 @@
 {
+  "editor.quickSuggestionsDelay": 10,
+  "editor.acceptSuggestionOnEnter": "on",
+  "editor.hover.hidingDelay": 10,
+  "editor.hover.delay": 1000
 }

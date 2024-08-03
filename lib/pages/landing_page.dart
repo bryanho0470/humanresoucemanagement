@@ -65,7 +65,7 @@ class _LandingScreenState extends State<LandingPage> {
 
   @override
   Widget build(BuildContext context) {
-    String username = (widget.username?.toString() ?? "no token");
+    String username = (widget.username?.toString() ?? "Edit mode");
     final color = Theme.of(context).primaryColor;
     // final ColorScheme colorScheme = Theme.of(context).colorScheme;
 
@@ -96,9 +96,6 @@ class _LandingScreenState extends State<LandingPage> {
             NotificationSummary(),
             UserPopupMenu(),
             // there are three menue in the Popup manu
-            SizedBox(
-              width: 10,
-            )
           ],
           shadowColor: Colors.black,
           iconTheme: const IconThemeData(color: Colors.white),
@@ -121,26 +118,6 @@ class _LandingScreenState extends State<LandingPage> {
 
         body: Stack(
           children: [
-            Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    AppColors.backgroundFadedColor,
-                    AppColors.backgroundColor,
-                  ],
-                  stops: [0.0, 1],
-                ),
-              ),
-            ),
-            const SafeArea(
-              child: Text("Test"),
-            ),
-            // const Align(
-            //   alignment: Alignment.bottomCenter,
-            //   child: AddTodoButton(),
-            // ),
             pageList[currentPageIndex],
           ],
         ),
@@ -198,14 +175,14 @@ class _LandingScreenState extends State<LandingPage> {
           child: FloatingActionButton(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
-            heroTag: _heroAddTodo,
+            heroTag: _heroAddQuestion,
             splashColor: AppColors.nkColortrans,
             backgroundColor: AppColors.nkColor,
             foregroundColor: Colors.white,
             onPressed: () {
               Navigator.of(context)
                   .push(HeroDialogRoute(builder: (BuildContext context) {
-                return const _AddTodoPopupCard();
+                return const _AddAuestionCard();
               }));
             },
             // onPressed: () {
@@ -226,10 +203,10 @@ class _LandingScreenState extends State<LandingPage> {
   }
 }
 
-const String _heroAddTodo = "add-todo-hero";
+const String _heroAddQuestion = "add-todo-hero";
 
-class _AddTodoPopupCard extends StatelessWidget {
-  const _AddTodoPopupCard({super.key});
+class _AddAuestionCard extends StatelessWidget {
+  const _AddAuestionCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -237,7 +214,7 @@ class _AddTodoPopupCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(32.0),
         child: Hero(
-          tag: _heroAddTodo,
+          tag: _heroAddQuestion,
           createRectTween: (begin, end) {
             return CustomRectTween(begin: begin, end: end);
           },
@@ -254,7 +231,7 @@ class _AddTodoPopupCard extends StatelessWidget {
                   children: [
                     const TextField(
                       decoration: InputDecoration(
-                        hintText: "New todo",
+                        hintText: "Question title",
                         hintStyle: TextStyle(
                           color: Colors.white,
                         ),
@@ -272,7 +249,7 @@ class _AddTodoPopupCard extends StatelessWidget {
                     ),
                     const TextField(
                       decoration: InputDecoration(
-                        hintText: "write a note",
+                        hintText: "Detailed question",
                         hintStyle: TextStyle(
                           color: Colors.white,
                         ),

@@ -17,19 +17,12 @@ class _SharingPageState extends State<SharingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[300],
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
+          padding: const EdgeInsets.symmetric(horizontal: 0),
           child: Column(
             children: [
-              Expanded(
-                child: ListView.builder(
-                  itemCount: 2,
-                  itemBuilder: (context, index) {
-                    return const QuestionCard();
-                  },
-                ),
-              ),
               Expanded(
                 child: SafeArea(
                   child: _QuestionContents(
@@ -57,7 +50,6 @@ class _QuestionContents extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: questions.length,
-      padding: const EdgeInsets.all(2),
       itemBuilder: (context, index) {
         final question = questions[index];
         return _QuestionCard(question: question);
@@ -90,38 +82,20 @@ class _QuestionCard extends StatelessWidget {
         },
         tag: question.id,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.all(12),
           child: Material(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(15),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   _QuestionTitle(title: question.title),
-                  const SizedBox(
-                    height: 8,
-                  ),
                   ...[
                     const Divider(),
-                    _QuestionItemBox(question: question.contents),
+                    _QuestionItemBox(question: question),
                   ],
-                  Container(
-                    margin: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.black12,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const TextField(
-                      maxLines: 8,
-                      cursorColor: Colors.white,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.all(8),
-                        hintText: "write a questions...",
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  )
                 ],
               ),
             ),
@@ -168,13 +142,13 @@ class _QuestionPopupCard extends StatelessWidget {
         return CustomRectTween(begin: begin, end: end);
       },
       child: Padding(
-        padding: const EdgeInsets.all(6),
+        padding: const EdgeInsets.all(12),
         child: Material(
           borderRadius: BorderRadius.circular(16),
-          color: AppColors.cardColor,
+          color: Colors.white,
           child: SizedBox(
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(8),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -185,8 +159,24 @@ class _QuestionPopupCard extends StatelessWidget {
                     ),
                     ...[
                       const Divider(),
-                      _QuestionItemBox(question: question.contents)
-                    ]
+                      _QuestionItemBox(question: question),
+                    ],
+                    Container(
+                      margin: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const TextField(
+                        maxLines: 8,
+                        cursorColor: Colors.white,
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(8),
+                          hintText: "write a questions...",
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -204,10 +194,40 @@ class _QuestionItemBox extends StatelessWidget {
     required this.question,
   });
 
-  final String question;
+  final Question question;
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Column(children: [
+      _QuestionItemTile(question: question),
+    ]);
+  }
+}
+
+class _QuestionItemTile extends StatefulWidget {
+  const _QuestionItemTile({
+    super.key,
+    required this.question,
+  });
+
+  final Question question;
+
+  @override
+  State<_QuestionItemTile> createState() => __QuestionItemTileState();
+}
+
+class __QuestionItemTileState extends State<_QuestionItemTile> {
+  bool val = false;
+  void _onChanged(bool? val) {
+    setState(() {
+      widget.question.completed = val!;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(widget.question.contents),
+    );
   }
 }

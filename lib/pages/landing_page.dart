@@ -8,7 +8,6 @@ import 'package:humanresoucemanagement/pages/sharing_page.dart';
 import 'package:humanresoucemanagement/pages/user_popup_menu.dart';
 import 'package:humanresoucemanagement/styles/custom_rect_tween.dart';
 import 'package:humanresoucemanagement/styles/style.dart';
-import 'package:humanresoucemanagement/widgets/add_todo_button.dart';
 
 class LandingPage extends StatefulWidget {
   final String? username;

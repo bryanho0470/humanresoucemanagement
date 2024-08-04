@@ -1,10 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:humanresoucemanagement/datas/fake_question_set.dart';
 import 'package:humanresoucemanagement/global/common/hero_dialog_route.dart';
 import 'package:humanresoucemanagement/models/question_data_model.dart';
 import 'package:humanresoucemanagement/styles/custom_rect_tween.dart';
-import 'package:humanresoucemanagement/styles/style.dart';
-import 'package:humanresoucemanagement/widgets/question_card_widget.dart';
 
 class SharingPage extends StatefulWidget {
   const SharingPage({super.key});
@@ -14,6 +12,13 @@ class SharingPage extends StatefulWidget {
 }
 
 class _SharingPageState extends State<SharingPage> {
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  Stream<List<Question>> _getQuestionData() {
+    return firestore.collection("questions").snapshots().map((snapshot) =>
+        snapshot.docs.map((doc) => Question.fromFirestore(doc)).toList());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,8 +30,25 @@ class _SharingPageState extends State<SharingPage> {
             children: [
               Expanded(
                 child: SafeArea(
-                  child: _QuestionContents(
-                    questions: fakeData,
+                  child: StreamBuilder<List<Question>>(
+                    stream: _getQuestionData(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      if (snapshot.data == null || snapshot.data!.isEmpty) {
+                        return const Center(
+                          child: Text('no request found'),
+                        );
+                      } else {
+                        final questionData = snapshot.data!;
+                        return _QuestionContents(
+                          questions: questionData,
+                        );
+                      }
+                    },
                   ),
                 ),
               ),
@@ -227,6 +249,10 @@ class __QuestionItemTileState extends State<_QuestionItemTile> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      leading: Checkbox(
+        onChanged: _onChanged,
+        value: widget.question.completed,
+      ),
       title: Text(widget.question.contents),
     );
   }

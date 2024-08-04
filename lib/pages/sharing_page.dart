@@ -106,6 +106,8 @@ class _QuestionCard extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Material(
+            shadowColor: Colors.grey,
+            elevation: 2,
             color: Colors.white,
             borderRadius: BorderRadius.circular(15),
             child: Padding(

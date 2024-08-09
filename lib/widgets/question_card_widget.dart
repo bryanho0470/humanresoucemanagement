@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:humanresoucemanagement/global/common/hero_dialog_route.dart';
 import 'package:humanresoucemanagement/models/question_data_model.dart';
+import 'package:humanresoucemanagement/pages/detailed_question_page.dart';
 import 'package:humanresoucemanagement/styles/custom_rect_tween.dart';
+import 'package:humanresoucemanagement/styles/style.dart';
 
 class QuestionContents extends StatelessWidget {
   const QuestionContents({
@@ -25,7 +27,7 @@ class QuestionContents extends StatelessWidget {
 
 ///[=====================================================================]
 
-class _QuestionCard extends StatelessWidget {
+class _QuestionCard extends StatefulWidget {
   const _QuestionCard({
     required this.question,
   });
@@ -33,12 +35,25 @@ class _QuestionCard extends StatelessWidget {
   final Question question;
 
   @override
+  State<_QuestionCard> createState() => _QuestionCardState();
+}
+
+class _QuestionCardState extends State<_QuestionCard> {
+  bool isFolded = false;
+
+  void toggleFold() {
+    setState(() {
+      isFolded = !isFolded;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(HeroDialogRoute(
           builder: (context) => Center(
-            child: _QuestionPopupCard(question: question),
+            child: _QuestionPopupCard(question: widget.question),
           ),
         ));
       },
@@ -46,7 +61,7 @@ class _QuestionCard extends StatelessWidget {
         createRectTween: (begin, end) {
           return CustomRectTween(begin: begin, end: end);
         },
-        tag: question.id,
+        tag: widget.question.id,
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Material(
@@ -59,11 +74,22 @@ class _QuestionCard extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  _QuestionTitle(title: question.title),
-                  ...[
-                    const Divider(),
-                    _QuestionItemBox(question: question),
-                  ],
+                  _QuestionTitleForHide(
+                    title: widget.question.title,
+                    toggleFold: toggleFold,
+                    isFolded: isFolded,
+                  ),
+                  AnimatedSize(
+                    duration: const Duration(milliseconds: 30),
+                    child: isFolded
+                        ? const SizedBox.shrink()
+                        : Column(
+                            children: [
+                              const Divider(),
+                              _QuestionItemBox(question: widget.question),
+                            ],
+                          ),
+                  )
                 ],
               ),
             ),
@@ -77,8 +103,71 @@ class _QuestionCard extends StatelessWidget {
 ///[=====================================================================]
 
 // sharing list title setting
-class _QuestionTitle extends StatelessWidget {
-  const _QuestionTitle({
+class _QuestionTitleForHide extends StatelessWidget {
+  const _QuestionTitleForHide({
+    required this.title,
+    required this.toggleFold,
+    required this.isFolded,
+  });
+
+  final String title;
+  final VoidCallback toggleFold;
+  final bool isFolded;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 32,
+              child: Icon(
+                Icons.priority_high,
+                color: Colors.red,
+              ),
+            ),
+            SizedBox(
+              width: 32,
+              child: Icon(
+                Icons.flash_on_rounded,
+                color: Colors.red,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          width: 220,
+          child: Text(
+            title,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
+          ),
+        ),
+        SizedBox(
+          width: 65,
+          child: TextButton(
+            onPressed: toggleFold,
+            child: Text(
+              isFolded ? "Show" : "Hide",
+              style: const TextStyle(color: Colors.grey),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+}
+
+///[=====================================================================]
+
+// sharing list title setting
+class _QuestionTitleForClose extends StatelessWidget {
+  const _QuestionTitleForClose({
     required this.title,
   });
 
@@ -121,9 +210,11 @@ class _QuestionTitle extends StatelessWidget {
         SizedBox(
           width: 65,
           child: TextButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
             child: const Text(
-              "Hide",
+              "Close",
               style: TextStyle(color: Colors.grey),
             ),
           ),
@@ -164,13 +255,6 @@ class _QuestionItemTile extends StatefulWidget {
 }
 
 class __QuestionItemTileState extends State<_QuestionItemTile> {
-  bool val = false;
-  void _onChanged(bool? val) {
-    setState(() {
-      widget.question.completed = val!;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     // set chatacter limit
@@ -195,48 +279,53 @@ class __QuestionItemTileState extends State<_QuestionItemTile> {
               const SizedBox(
                 width: 20,
               ),
-              const Expanded(
+              Expanded(
                 child: Wrap(
+                  spacing: 3,
+                  runSpacing: 3,
+                  alignment: WrapAlignment.end,
+                  runAlignment: WrapAlignment.spaceBetween,
                   children: [
+                    /// [need to convert this list to Widget]
                     Chip(
-                      label: Text(
+                      label: const Text(
                         'Economy',
                         style: TextStyle(fontSize: 10),
                       ),
-                      backgroundColor: Colors.blue,
-                      padding: EdgeInsets.all(1),
+                      backgroundColor: Colors.grey[400],
+                      padding: const EdgeInsets.all(0.1),
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      labelStyle: TextStyle(color: Colors.white),
+                      labelStyle: const TextStyle(color: Colors.white),
                     ),
                     Chip(
-                      label: Text(
+                      label: const Text(
                         "Social",
                         style: TextStyle(fontSize: 10),
                       ),
-                      backgroundColor: Colors.orange,
-                      padding: EdgeInsets.all(4),
+                      backgroundColor: Colors.grey[400],
+                      padding: const EdgeInsets.all(0.1),
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      labelStyle: TextStyle(color: Colors.white),
+                      labelStyle: const TextStyle(color: Colors.white),
                     ),
                     Chip(
-                      label: Text(
+                      label: const Text(
                         "Environment",
                         style: TextStyle(fontSize: 10),
                       ),
-                      backgroundColor: Colors.green,
-                      padding: EdgeInsets.all(4),
+                      backgroundColor: Colors.grey[400],
+                      padding: const EdgeInsets.all(0.1),
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      labelStyle: TextStyle(color: Colors.white),
+                      labelStyle: const TextStyle(color: Colors.white),
                     ),
                     Chip(
-                      label: Text(
+                      label: const Text(
                         "Sports",
                         style: TextStyle(fontSize: 10),
                       ),
-                      backgroundColor: Colors.purple,
-                      padding: EdgeInsets.all(4),
+                      backgroundColor: Colors.grey[400],
+                      padding: const EdgeInsets.all(0.1),
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      labelStyle: TextStyle(color: Colors.white),
+                      labelStyle: const TextStyle(color: Colors.white),
                     )
                   ],
                 ),
@@ -246,6 +335,7 @@ class __QuestionItemTileState extends State<_QuestionItemTile> {
           const SizedBox(
             height: 10,
           ),
+          const Divider(),
           SizedBox(
             width: 350,
             child: Text(
@@ -291,10 +381,7 @@ class _QuestionPopupCard extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    _QuestionTitle(title: question.title),
-                    const SizedBox(
-                      height: 8,
-                    ),
+                    _QuestionTitleForClose(title: question.title),
                     ...[
                       const Divider(),
                       _QuestionFullItemBox(question: question),
@@ -341,34 +428,62 @@ class _QuestionFullItemTile extends StatefulWidget {
 }
 
 class __QuestionFullItemTileState extends State<_QuestionFullItemTile> {
-  bool val = false;
-  void _onChanged(bool? val) {
-    setState(() {
-      widget.question.completed = val!;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.asset(
-                "assets/images/person/face.JPG",
-                width: 30,
+              Container(
                 height: 30,
+                width: 30,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    image: const DecorationImage(
+                      fit: BoxFit.cover,
+                      image: NetworkImage(
+                          "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Lion_waiting_in_Namibia.jpg/220px-Lion_waiting_in_Namibia.jpg"),
+                    )),
               ),
               const SizedBox(
                 width: 20,
               ),
-              Text(widget.question.contents),
+              Expanded(
+                child: SizedBox(
+                  height: 300,
+                  child: Scrollbar(
+                    child: SingleChildScrollView(
+                      child: Text(widget.question.contents),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
+          const Divider(),
+          TextButton(
+            style: TextButton.styleFrom(
+              backgroundColor: AppColors.nkColortrans,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const DetailedQuestion(),
+                ),
+              );
+            },
+            child: const Text(
+              "Let me Answer",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+          const Divider(),
           SizedBox(
             width: 350,
             child: Text(

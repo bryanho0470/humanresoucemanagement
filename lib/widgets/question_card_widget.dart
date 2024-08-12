@@ -472,7 +472,9 @@ class __QuestionFullItemTileState extends State<_QuestionFullItemTile> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const DetailedQuestion(),
+                  builder: (context) => DetailedQuestion(
+                    question: widget.question,
+                  ),
                 ),
               );
             },
@@ -480,6 +482,7 @@ class __QuestionFullItemTileState extends State<_QuestionFullItemTile> {
               "Let me Answer",
               style: TextStyle(
                 color: Colors.white,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),

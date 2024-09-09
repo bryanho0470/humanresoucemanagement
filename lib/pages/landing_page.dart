@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:humanresoucemanagement/global/common/fluttertoast.dart';
 import 'package:humanresoucemanagement/global/common/hero_dialog_route.dart';
 import 'package:humanresoucemanagement/pages/dashboard_page.dart';
 import 'package:humanresoucemanagement/pages/notification_summary.dart';
@@ -23,6 +25,8 @@ class LandingPage extends StatefulWidget {
   @override
   State<LandingPage> createState() => _LandingScreenState();
 }
+
+const String _heroAddQuestion = "add-todo-hero";
 
 class _LandingScreenState extends State<LandingPage> {
   int currentPageIndex = 0;
@@ -181,7 +185,7 @@ class _LandingScreenState extends State<LandingPage> {
             onPressed: () {
               Navigator.of(context)
                   .push(HeroDialogRoute(builder: (BuildContext context) {
-                return const _AddAuestionCard();
+                return _AddQuestionCard();
               }));
             },
             // onPressed: () {
@@ -202,10 +206,14 @@ class _LandingScreenState extends State<LandingPage> {
   }
 }
 
-const String _heroAddQuestion = "add-todo-hero";
+class _AddQuestionCard extends StatelessWidget {
+  _AddQuestionCard({super.key});
 
-class _AddAuestionCard extends StatelessWidget {
-  const _AddAuestionCard({super.key});
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final TextEditingController _newQuestionTitleController =
+      TextEditingController();
+  final TextEditingController _newQuestionContentsController =
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -228,17 +236,18 @@ class _AddAuestionCard extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const TextField(
-                      decoration: InputDecoration(
+                    TextField(
+                      controller: _newQuestionTitleController,
+                      decoration: const InputDecoration(
                         hintText: "Question title",
                         hintStyle: TextStyle(
-                          color: Colors.white,
+                          color: Colors.white60,
                         ),
                         border: InputBorder.none,
                         fillColor: Colors.white,
                       ),
                       cursorColor: Colors.white,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                       ),
                     ),
@@ -246,15 +255,16 @@ class _AddAuestionCard extends StatelessWidget {
                       color: Colors.white,
                       thickness: 1,
                     ),
-                    const TextField(
-                      decoration: InputDecoration(
+                    TextField(
+                      controller: _newQuestionContentsController,
+                      decoration: const InputDecoration(
                         hintText: "Detailed question",
                         hintStyle: TextStyle(
-                          color: Colors.white,
+                          color: Colors.white60,
                         ),
                         border: InputBorder.none,
                       ),
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                       ),
                       cursorColor: Colors.white,
@@ -265,7 +275,7 @@ class _AddAuestionCard extends StatelessWidget {
                       thickness: 1,
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: _addQuestion,
                       child: const Text(
                         'ADD Question',
                         style: TextStyle(
@@ -282,5 +292,34 @@ class _AddAuestionCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _addQuestion() async {
+    String newQuestionTitle = _newQuestionTitleController.text;
+    String newQuestionContents = _newQuestionContentsController.text;
+
+    try {
+      final QuerySnapshot questionRef = await firestore
+          .collection('questions')
+          .where('title', isEqualTo: newQuestionTitle)
+          .get();
+
+      if (questionRef.docs.isNotEmpty) {
+        showToast(message: "Your question alread exsit");
+        return;
+      } else {
+        await firestore.collection('questions').add({
+          'title': newQuestionTitle,
+          'contents': newQuestionContents,
+          // 'category' : newQuestionCategory,
+          // 'name' : newQuestionNickname,
+          // 'owner' : newQuestionOwner,
+          // 'id' : question.id,
+          'created_at': FieldValue.serverTimestamp(),
+        });
+      }
+    } catch (e) {
+      showToast(message: "adding question faild. please try again : $e");
+    }
   }
 }

@@ -57,41 +57,35 @@ class _QuestionCardState extends State<_QuestionCard> {
           ),
         ));
       },
-      child: Hero(
-        createRectTween: (begin, end) {
-          return CustomRectTween(begin: begin, end: end);
-        },
-        tag: widget.question.id,
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Material(
-            shadowColor: Colors.grey,
-            elevation: 2,
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  _QuestionTitleForHide(
-                    title: widget.question.title,
-                    toggleFold: toggleFold,
-                    isFolded: isFolded,
-                  ),
-                  AnimatedSize(
-                    duration: const Duration(milliseconds: 30),
-                    child: isFolded
-                        ? const SizedBox.shrink()
-                        : Column(
-                            children: [
-                              const Divider(),
-                              _QuestionItemBox(question: widget.question),
-                            ],
-                          ),
-                  )
-                ],
-              ),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Material(
+          shadowColor: Colors.grey,
+          elevation: 2,
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                _QuestionTitleForHide(
+                  title: widget.question.title,
+                  toggleFold: toggleFold,
+                  isFolded: isFolded,
+                ),
+                AnimatedSize(
+                  duration: const Duration(milliseconds: 50),
+                  child: isFolded
+                      ? const SizedBox.shrink()
+                      : Column(
+                          children: [
+                            const Divider(),
+                            _QuestionItemBox(question: widget.question),
+                          ],
+                        ),
+                )
+              ],
             ),
           ),
         ),
@@ -258,7 +252,7 @@ class __QuestionItemTileState extends State<_QuestionItemTile> {
   @override
   Widget build(BuildContext context) {
     // set chatacter limit
-    const int textLimit = 15;
+    const int textLimit = 25;
 
     // truncate the text if it exceeds the limit
     String truncatedText = widget.question.contents.length > textLimit

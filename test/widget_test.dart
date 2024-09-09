@@ -1,30 +1,68 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
 
-import 'package:humanresoucemanagement/main.dart';
+void main() => runApp(const MyApp());
 
-void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      title: 'Hero Example',
+      home: FirstScreen(),
+    );
+  }
+}
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+class FirstScreen extends StatelessWidget {
+  const FirstScreen({super.key});
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
-  });
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('First Screen'),
+      ),
+      body: Center(
+        child: GestureDetector(
+          onTap: () {
+            // Navigate to the second screen
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => const SecondScreen()));
+          },
+          child: Hero(
+            tag: 'imageHero', // heroTag
+            child: Image.network(
+              'https://yt3.ggpht.com/yti/ANjgQV_zjBNPQmlERoZ8QA5N5yChZGkAVUAEX8GED0KN6Apf7Q=s88-c-k-c0x00ffffff-no-rj',
+              width: 100,
+              height: 100,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SecondScreen extends StatelessWidget {
+  const SecondScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Second Screen'),
+      ),
+      body: Center(
+        child: Hero(
+          tag: 'imageHero', // Same heroTag as in FirstScreen
+          child: Image.network(
+            'https://yt3.ggpht.com/yti/ANjgQV_zjBNPQmlERoZ8QA5N5yChZGkAVUAEX8GED0KN6Apf7Q=s88-c-k-c0x00ffffff-no-rj',
+            width: 300,
+            height: 300,
+          ),
+        ),
+      ),
+    );
+  }
 }

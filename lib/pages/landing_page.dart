@@ -15,12 +15,13 @@ class LandingPage extends StatefulWidget {
   final String? username;
   final String? email;
   final String? passedtoken;
-  const LandingPage({
-    super.key,
-    this.username,
-    this.email,
-    this.passedtoken,
-  });
+  final String? coporationnumber;
+  const LandingPage(
+      {super.key,
+      this.username,
+      this.email,
+      this.passedtoken,
+      this.coporationnumber});
 
   @override
   State<LandingPage> createState() => _LandingScreenState();
@@ -185,7 +186,12 @@ class _LandingScreenState extends State<LandingPage> {
             onPressed: () {
               Navigator.of(context)
                   .push(HeroDialogRoute(builder: (BuildContext context) {
-                return _AddQuestionCard();
+                return _AddQuestionCard(
+                  username: widget.username,
+                  coporationnumber: widget.coporationnumber,
+                  email: widget.email,
+                  passedtoken: widget.passedtoken,
+                );
               }));
             },
             // onPressed: () {
@@ -206,14 +212,67 @@ class _LandingScreenState extends State<LandingPage> {
   }
 }
 
-class _AddQuestionCard extends StatelessWidget {
-  _AddQuestionCard({super.key});
+class _AddQuestionCard extends StatefulWidget {
+  final String? username;
+  final String? email;
+  final String? passedtoken;
+  final String? coporationnumber;
+  const _AddQuestionCard({
+    this.coporationnumber,
+    this.username,
+    this.email,
+    this.passedtoken,
+  });
 
+  @override
+  State<_AddQuestionCard> createState() => _AddQuestionCardState();
+}
+
+class _AddQuestionCardState extends State<_AddQuestionCard> {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
   final TextEditingController _newQuestionTitleController =
       TextEditingController();
+
   final TextEditingController _newQuestionContentsController =
       TextEditingController();
+
+  final TextEditingController _categorySearchController =
+      TextEditingController();
+
+  List<String> selectedCategories = [];
+  List<String> filteredCategories = [];
+
+  final List<String> categories = [
+    'Engineering license',
+    'Urban Planning',
+    'Road planning',
+    'Bridge Planning',
+    'Sports',
+    'Hobby',
+    'Money',
+    'Social',
+    'Health',
+    'Future',
+    'Space',
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    filteredCategories = categories; // initially, show all categories
+    _categorySearchController
+        .addListener(_filterCategories); // add listener to search controller
+  }
+
+  void _filterCategories() {
+    String searchKeyword = _categorySearchController.text.trim().toLowerCase();
+    setState(() {
+      filteredCategories = categories.where((category) {
+        return category.toLowerCase().contains(searchKeyword);
+      }).toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -274,6 +333,39 @@ class _AddQuestionCard extends StatelessWidget {
                       color: Colors.white,
                       thickness: 1,
                     ),
+                    TextField(
+                      style: const TextStyle(color: Colors.white),
+                      controller: _categorySearchController,
+                      decoration: const InputDecoration(
+                        hintText: "Search categories",
+                        hintStyle: TextStyle(color: Colors.white60),
+                        border: InputBorder.none,
+                      ),
+                    ),
+                    const Divider(
+                      color: Colors.white,
+                      thickness: 1,
+                    ),
+                    SizedBox(
+                      height: 150,
+                      child: Scrollbar(
+                        child: SingleChildScrollView(
+                          child: Wrap(
+                            spacing: 8.0,
+                            runSpacing: 4.0,
+                            children: filteredCategories.map((category) {
+                              return FilterChip(
+                                label: Text(category),
+                                selected: selectedCategories.contains(category),
+                                onSelected: (bool selected) {
+                                  _toggleCategorySelection(category);
+                                },
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                    ),
                     TextButton(
                       onPressed: _addQuestion,
                       child: const Text(
@@ -297,6 +389,18 @@ class _AddQuestionCard extends StatelessWidget {
   void _addQuestion() async {
     String newQuestionTitle = _newQuestionTitleController.text;
     String newQuestionContents = _newQuestionContentsController.text;
+    String newQuestionOwner = widget.coporationnumber ?? "No coporation Number";
+    String newQuestionName = widget.username ?? "Anonymous";
+
+    if (newQuestionTitle.isEmpty || newQuestionContents.isEmpty) {
+      showToast(message: "Title or contents cannot be empty");
+      return;
+    }
+
+    if (selectedCategories.isEmpty) {
+      showToast(message: "Please, select at least one category");
+      return;
+    }
 
     try {
       final QuerySnapshot questionRef = await firestore
@@ -311,9 +415,9 @@ class _AddQuestionCard extends StatelessWidget {
         await firestore.collection('questions').add({
           'title': newQuestionTitle,
           'contents': newQuestionContents,
-          // 'category' : newQuestionCategory,
-          // 'name' : newQuestionNickname,
-          // 'owner' : newQuestionOwner,
+          'category': selectedCategories,
+          'name': newQuestionName,
+          'owner': newQuestionOwner,
           // 'id' : question.id,
           'created_at': FieldValue.serverTimestamp(),
         });
@@ -321,5 +425,17 @@ class _AddQuestionCard extends StatelessWidget {
     } catch (e) {
       showToast(message: "adding question faild. please try again : $e");
     }
+  }
+
+  void _toggleCategorySelection(String category) {
+    setState(
+      () {
+        if (selectedCategories.contains(category)) {
+          selectedCategories.remove(category);
+        } else {
+          selectedCategories.add(category);
+        }
+      },
+    );
   }
 }

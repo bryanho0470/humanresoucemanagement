@@ -264,8 +264,8 @@ class _LoginPageState extends State<LoginPage> {
       _isSigning = true;
     });
 
-    String email = "park@gmail.com"; // _emailController.text;
-    String password = "hoho0470"; // _passwordController.text;
+    String email = _emailController.text;
+    String password = _passwordController.text;
 
     try {
       User? user = await _auth.signInWithEmailAndPassword(email, password);
@@ -276,6 +276,7 @@ class _LoginPageState extends State<LoginPage> {
             await firestore.collection("users").doc(user.uid).get();
 
         String username = userData.get('username');
+        String coporationnumber = userData.get('coporationnumber');
 
         showToast(message: "$username, you are successfully signed in");
 
@@ -287,6 +288,7 @@ class _LoginPageState extends State<LoginPage> {
                 email: email,
                 username: username,
                 passedtoken: user.uid,
+                coporationnumber: coporationnumber,
               ),
             ),
             (route) => false);

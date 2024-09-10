@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       initialRoute: "/",
       routes: {
         "/": (context) => const SplashScreen(
-              child: LandingPage(),
+              child: LoginPage(),
             ),
         "/home": (context) => const LandingPage(
               passedtoken: "no_token",

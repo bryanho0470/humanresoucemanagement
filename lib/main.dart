@@ -5,6 +5,7 @@ import 'package:humanresoucemanagement/pages/landing_page.dart';
 import 'package:humanresoucemanagement/pages/login_page.dart';
 import 'package:humanresoucemanagement/pages/signup_page.dart';
 import 'package:humanresoucemanagement/screens/splash_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -23,6 +23,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _coporationnumber = TextEditingController();
 
   final storage = const FlutterSecureStorage();
 
@@ -31,6 +32,7 @@ class _SignUpPageState extends State<SignUpPage> {
     _usernameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _coporationnumber.dispose();
     super.dispose();
   }
 
@@ -86,7 +88,9 @@ class _SignUpPageState extends State<SignUpPage> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          backgroundColor: const Color(0xff0179bd),
+          backgroundColor: const Color(
+            0xff0179bd,
+          ),
         ),
         body: Center(
           child: Padding(
@@ -109,6 +113,20 @@ class _SignUpPageState extends State<SignUpPage> {
                 FormContainerWidget(
                   controller: _usernameController,
                   hintText: "Username",
+                  isPasswordField: false,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Email is required';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                FormContainerWidget(
+                  controller: _coporationnumber,
+                  hintText: "Coporation Number",
                   isPasswordField: false,
                 ),
                 const SizedBox(
@@ -206,6 +224,7 @@ class _SignUpPageState extends State<SignUpPage> {
     String username = _usernameController.text;
     String email = _emailController.text;
     String password = _passwordController.text;
+    String coporationnumber = _coporationnumber.text;
 
     User? user = await _auth.signUpWithEmailAndPassword(email, password);
     final DocumentReference userRef =
@@ -216,6 +235,7 @@ class _SignUpPageState extends State<SignUpPage> {
       await userRef.set(
         {
           'username': username,
+          'coporationnumber': coporationnumber,
           'email': email,
           'password': password,
           "token": user.uid,
@@ -230,6 +250,7 @@ class _SignUpPageState extends State<SignUpPage> {
         MaterialPageRoute(
           builder: (context) => LandingPage(
             username: username,
+            coporationnumber: coporationnumber,
             email: email,
             passedtoken: uidToToken,
           ),

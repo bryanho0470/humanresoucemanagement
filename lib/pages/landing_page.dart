@@ -1,28 +1,33 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:humanresoucemanagement/global/common/fluttertoast.dart';
 import 'package:humanresoucemanagement/global/common/hero_dialog_route.dart';
 import 'package:humanresoucemanagement/pages/dashboard_page.dart';
 import 'package:humanresoucemanagement/pages/notification_summary.dart';
 import 'package:humanresoucemanagement/pages/sharing_page.dart';
-import 'package:humanresoucemanagement/pages/test.dart';
 import 'package:humanresoucemanagement/pages/user_popup_menu.dart';
-import 'package:humanresoucemanagement/widgets/add_todo_button.dart';
+import 'package:humanresoucemanagement/styles/custom_rect_tween.dart';
+import 'package:humanresoucemanagement/styles/style.dart';
 
 class LandingPage extends StatefulWidget {
   final String? username;
   final String? email;
   final String? passedtoken;
-  const LandingPage({
-    super.key,
-    this.username,
-    this.email,
-    this.passedtoken,
-  });
+  final String? coporationnumber;
+  const LandingPage(
+      {super.key,
+      this.username,
+      this.email,
+      this.passedtoken,
+      this.coporationnumber});
 
   @override
   State<LandingPage> createState() => _LandingScreenState();
 }
+
+const String _heroAddQuestion = "add-todo-hero";
 
 class _LandingScreenState extends State<LandingPage> {
   int currentPageIndex = 0;
@@ -64,7 +69,7 @@ class _LandingScreenState extends State<LandingPage> {
 
   @override
   Widget build(BuildContext context) {
-    String username = (widget.username?.toString() ?? "no token");
+    String username = (widget.username?.toString() ?? "Edit mode");
     final color = Theme.of(context).primaryColor;
     // final ColorScheme colorScheme = Theme.of(context).colorScheme;
 
@@ -95,9 +100,6 @@ class _LandingScreenState extends State<LandingPage> {
             NotificationSummary(),
             UserPopupMenu(),
             // there are three menue in the Popup manu
-            SizedBox(
-              width: 10,
-            )
           ],
           shadowColor: Colors.black,
           iconTheme: const IconThemeData(color: Colors.white),
@@ -118,10 +120,15 @@ class _LandingScreenState extends State<LandingPage> {
         ),
         // End of appbar
 
-        body: pageList[currentPageIndex],
+        body: Stack(
+          children: [
+            pageList[currentPageIndex],
+          ],
+        ),
         bottomNavigationBar: BottomAppBar(
-          notchMargin: 5,
-          color: const Color(0xffedf3fc),
+          height: 80,
+          notchMargin: 10,
+          color: Colors.white,
           shape: const CircularNotchedRectangle(),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -142,14 +149,19 @@ class _LandingScreenState extends State<LandingPage> {
                   selectedIndex: currentPageIndex,
                   destinations: const <NavigationDestination>[
                     NavigationDestination(
-                      icon: Icon(Icons.fact_check_outlined),
+                      icon: Icon(
+                        Icons.fact_check_outlined,
+                      ),
                       label: "Sharing",
                       selectedIcon: Icon(
                         Icons.fact_check,
                       ),
                     ),
+                    // NavigationDestination(icon: AddTodoButton(), label: ''),
                     NavigationDestination(
-                      icon: Icon(Icons.dashboard_outlined),
+                      icon: Icon(
+                        Icons.dashboard_outlined,
+                      ),
                       label: "Dashboard",
                       selectedIcon: Icon(
                         Icons.dashboard,
@@ -161,60 +173,269 @@ class _LandingScreenState extends State<LandingPage> {
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton.large(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(50.0),
-          ),
-          backgroundColor: color,
-          onPressed: () {
-            showBottomSheet(
-              context: context,
-              builder: (BuildContext context) {
-                return Wrap(
-                  children: <Widget>[
-                    const SizedBox(height: 20.0),
-                    ListTile(
-                      leading: const Hero(
-                        tag: 'hero-rectangle',
-                        child: BoxWidget(size: Size(50.0, 50.0)),
-                      ),
-                      onTap: () {
-                        Navigator.of(context)
-                            .push(HeroDialogRoute(builder: (context) {
-                          return const AddTodoButton();
-                        }));
-                      },
-                      title: const Text(
-                        'Tap on the icon to view hero animation transition.',
-                      ),
-                    ),
-                  ],
+        floatingActionButton: SizedBox(
+          height: 80,
+          width: 80,
+          child: FloatingActionButton(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+            heroTag: _heroAddQuestion,
+            splashColor: AppColors.nkColortrans,
+            backgroundColor: AppColors.nkColor,
+            foregroundColor: Colors.white,
+            onPressed: () {
+              Navigator.of(context)
+                  .push(HeroDialogRoute(builder: (BuildContext context) {
+                return _AddQuestionCard(
+                  username: widget.username,
+                  coporationnumber: widget.coporationnumber,
+                  email: widget.email,
+                  passedtoken: widget.passedtoken,
                 );
-              },
-            );
-          },
-          child: const Icon(Icons.local_activity),
+              }));
+            },
+            // onPressed: () {
+            //   Navigator.of(context).push(
+            //     HeroDialogRoute(
+            //       builder: (BuildContext context) {
+            //         return const AddTodoButton();
+            //       },
+            //     ),
+            //   );
+
+            child: const Icon(Icons.local_activity),
+          ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );
   }
+}
 
-  void _gotoDetailsPage(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute<void>(
-      builder: (BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text("Second Page"),
-        ),
-        body: const Center(
-          child: Hero(
-            tag: "hero-rectangle",
-            child: BoxWidget(
-              size: Size(200, 200),
+class _AddQuestionCard extends StatefulWidget {
+  final String? username;
+  final String? email;
+  final String? passedtoken;
+  final String? coporationnumber;
+  const _AddQuestionCard({
+    this.coporationnumber,
+    this.username,
+    this.email,
+    this.passedtoken,
+  });
+
+  @override
+  State<_AddQuestionCard> createState() => _AddQuestionCardState();
+}
+
+class _AddQuestionCardState extends State<_AddQuestionCard> {
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  final TextEditingController _newQuestionTitleController =
+      TextEditingController();
+
+  final TextEditingController _newQuestionContentsController =
+      TextEditingController();
+
+  final TextEditingController _categorySearchController =
+      TextEditingController();
+
+  List<String> selectedCategories = [];
+  List<String> filteredCategories = [];
+
+  final List<String> categories = [
+    'Engineering license',
+    'Urban Planning',
+    'Road planning',
+    'Bridge Planning',
+    'Sports',
+    'Hobby',
+    'Money',
+    'Social',
+    'Health',
+    'Future',
+    'Space',
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    filteredCategories = categories; // initially, show all categories
+    _categorySearchController
+        .addListener(_filterCategories); // add listener to search controller
+  }
+
+  void _filterCategories() {
+    String searchKeyword = _categorySearchController.text.trim().toLowerCase();
+    setState(() {
+      filteredCategories = categories.where((category) {
+        return category.toLowerCase().contains(searchKeyword);
+      }).toList();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Hero(
+          tag: _heroAddQuestion,
+          createRectTween: (begin, end) {
+            return CustomRectTween(begin: begin, end: end);
+          },
+          child: Material(
+            color: AppColors.nkColortrans,
+            elevation: 2,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: _newQuestionTitleController,
+                      decoration: const InputDecoration(
+                        hintText: "Question title",
+                        hintStyle: TextStyle(
+                          color: Colors.white60,
+                        ),
+                        border: InputBorder.none,
+                        fillColor: Colors.white,
+                      ),
+                      cursorColor: Colors.white,
+                      style: const TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    const Divider(
+                      color: Colors.white,
+                      thickness: 1,
+                    ),
+                    TextField(
+                      controller: _newQuestionContentsController,
+                      decoration: const InputDecoration(
+                        hintText: "Detailed question",
+                        hintStyle: TextStyle(
+                          color: Colors.white60,
+                        ),
+                        border: InputBorder.none,
+                      ),
+                      style: const TextStyle(
+                        color: Colors.white,
+                      ),
+                      cursorColor: Colors.white,
+                      maxLines: 6,
+                    ),
+                    const Divider(
+                      color: Colors.white,
+                      thickness: 1,
+                    ),
+                    TextField(
+                      style: const TextStyle(color: Colors.white),
+                      controller: _categorySearchController,
+                      decoration: const InputDecoration(
+                        hintText: "Search categories",
+                        hintStyle: TextStyle(color: Colors.white60),
+                        border: InputBorder.none,
+                      ),
+                    ),
+                    const Divider(
+                      color: Colors.white,
+                      thickness: 1,
+                    ),
+                    SizedBox(
+                      height: 150,
+                      child: Scrollbar(
+                        child: SingleChildScrollView(
+                          child: Wrap(
+                            spacing: 8.0,
+                            runSpacing: 4.0,
+                            children: filteredCategories.map((category) {
+                              return FilterChip(
+                                label: Text(category),
+                                selected: selectedCategories.contains(category),
+                                onSelected: (bool selected) {
+                                  _toggleCategorySelection(category);
+                                },
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: _addQuestion,
+                      child: const Text(
+                        'ADD Question',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ),
           ),
         ),
       ),
-    ));
+    );
+  }
+
+  void _addQuestion() async {
+    String newQuestionTitle = _newQuestionTitleController.text;
+    String newQuestionContents = _newQuestionContentsController.text;
+    String newQuestionOwner = widget.coporationnumber ?? "No coporation Number";
+    String newQuestionName = widget.username ?? "Anonymous";
+
+    if (newQuestionTitle.isEmpty || newQuestionContents.isEmpty) {
+      showToast(message: "Title or contents cannot be empty");
+      return;
+    }
+
+    if (selectedCategories.isEmpty) {
+      showToast(message: "Please, select at least one category");
+      return;
+    }
+
+    try {
+      final QuerySnapshot questionRef = await firestore
+          .collection('questions')
+          .where('title', isEqualTo: newQuestionTitle)
+          .get();
+
+      if (questionRef.docs.isNotEmpty) {
+        showToast(message: "Your question alread exsit");
+        return;
+      } else {
+        await firestore.collection('questions').add({
+          'title': newQuestionTitle,
+          'contents': newQuestionContents,
+          'category': selectedCategories,
+          'name': newQuestionName,
+          'owner': newQuestionOwner,
+          // 'id' : question.id,
+          'created_at': FieldValue.serverTimestamp(),
+        });
+      }
+    } catch (e) {
+      showToast(message: "adding question faild. please try again : $e");
+    }
+  }
+
+  void _toggleCategorySelection(String category) {
+    setState(
+      () {
+        if (selectedCategories.contains(category)) {
+          selectedCategories.remove(category);
+        } else {
+          selectedCategories.add(category);
+        }
+      },
+    );
   }
 }

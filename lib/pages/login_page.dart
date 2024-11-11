@@ -151,46 +151,46 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(
                   height: 30,
                 ),
-                GestureDetector(
-                  onTap: () {
-                    _signInWithGoogle();
-                  },
-                  child: Container(
-                    width: double.infinity,
-                    height: 45,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: Colors.black,
-                      ),
-                    ),
-                    child: const Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            FontAwesomeIcons.google,
-                            size: 20,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            "Sign in with Google",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
+                // GestureDetector(
+                //   onTap: () {
+                //     _signInWithGoogle();
+                //   },
+                //   child: Container(
+                //     width: double.infinity,
+                //     height: 45,
+                //     decoration: BoxDecoration(
+                //       color: Colors.white,
+                //       borderRadius: BorderRadius.circular(10),
+                //       border: Border.all(
+                //         color: Colors.black,
+                //       ),
+                //     ),
+                //     child: const Center(
+                //       child: Row(
+                //         mainAxisAlignment: MainAxisAlignment.center,
+                //         children: [
+                //           Icon(
+                //             FontAwesomeIcons.google,
+                //             size: 20,
+                //           ),
+                //           SizedBox(
+                //             width: 5,
+                //           ),
+                //           Text(
+                //             "Sign in with Google",
+                //             style: TextStyle(
+                //               color: Colors.black,
+                //               fontWeight: FontWeight.bold,
+                //             ),
+                //           )
+                //         ],
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                // const SizedBox(
+                //   height: 10,
+                // ),
                 GestureDetector(
                   onTap: _signIn,
                   child: Container(
@@ -218,6 +218,31 @@ class _LoginPageState extends State<LoginPage> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                GestureDetector(
+                  child: Container(
+                    width: double.infinity,
+                    height: 45,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(
+                          color: Colors.black,
+                          strokeAlign: BorderSide.strokeAlignInside),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        "管理職ログイン",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18),
+                      ),
                     ),
                   ),
                 ),
@@ -264,8 +289,8 @@ class _LoginPageState extends State<LoginPage> {
       _isSigning = true;
     });
 
-    String email = "park@gmail.com"; // _emailController.text;
-    String password = "hoho0470"; // _passwordController.text;
+    String email = _emailController.text;
+    String password = _passwordController.text;
 
     try {
       User? user = await _auth.signInWithEmailAndPassword(email, password);
@@ -276,6 +301,7 @@ class _LoginPageState extends State<LoginPage> {
             await firestore.collection("users").doc(user.uid).get();
 
         String username = userData.get('username');
+        String coporationnumber = userData.get('coporationnumber');
 
         showToast(message: "$username, you are successfully signed in");
 
@@ -287,6 +313,7 @@ class _LoginPageState extends State<LoginPage> {
                 email: email,
                 username: username,
                 passedtoken: user.uid,
+                coporationnumber: coporationnumber,
               ),
             ),
             (route) => false);
@@ -299,57 +326,57 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  _signInWithGoogle() async {
-    // initialize Google Signin
-    final GoogleSignIn googleSignIn = GoogleSignIn();
-    try {
-      // start the Google Signin in process
-      final GoogleSignInAccount? googleSignInAccount =
-          await googleSignIn.signIn();
-      //check if the sign-in was successful
-      if (googleSignInAccount != null) {
-        // get the google authentification detail
-        final GoogleSignInAuthentication googleSignInAuthentication =
-            await googleSignInAccount.authentication;
-        //create a credential from the google authentification
-        final AuthCredential credential = GoogleAuthProvider.credential(
-          idToken: googleSignInAuthentication.idToken,
-          accessToken: googleSignInAuthentication.accessToken,
-        );
-        //Sign in to Firebase with the Google credential and get user detail from firebaae
-        final UserCredential userCredential =
-            await _firebaseAuth.signInWithCredential(credential);
-        final User? user = userCredential.user;
-        showToast(
-            message:
-                "${user?.displayName}, you are successfully signed in with Google Account");
+  // _signInWithGoogle() async {
+  //   // initialize Google Signin
+  //   final GoogleSignIn googleSignIn = GoogleSignIn();
+  //   try {
+  //     // start the Google Signin in process
+  //     final GoogleSignInAccount? googleSignInAccount =
+  //         await googleSignIn.signIn();
+  //     //check if the sign-in was successful
+  //     if (googleSignInAccount != null) {
+  //       // get the google authentification detail
+  //       final GoogleSignInAuthentication googleSignInAuthentication =
+  //           await googleSignInAccount.authentication;
+  //       //create a credential from the google authentification
+  //       final AuthCredential credential = GoogleAuthProvider.credential(
+  //         idToken: googleSignInAuthentication.idToken,
+  //         accessToken: googleSignInAuthentication.accessToken,
+  //       );
+  //       //Sign in to Firebase with the Google credential and get user detail from firebaae
+  //       final UserCredential userCredential =
+  //           await _firebaseAuth.signInWithCredential(credential);
+  //       final User? user = userCredential.user;
+  //       showToast(
+  //           message:
+  //               "${user?.displayName}, you are successfully signed in with Google Account");
 
-        if (!context.mounted) return;
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => LandingPage(
-                username: user?.displayName,
-                email: user?.email,
-                passedtoken: credential.accessToken,
-              ),
-            ),
-            (route) => false);
+  //       if (!context.mounted) return;
+  //       Navigator.pushAndRemoveUntil(
+  //           context,
+  //           MaterialPageRoute(
+  //             builder: (context) => LandingPage(
+  //               username: user?.displayName,
+  //               email: user?.email,
+  //               passedtoken: credential.accessToken,
+  //             ),
+  //           ),
+  //           (route) => false);
 
-        final FirebaseFirestore firestore = FirebaseFirestore.instance;
-        final DocumentReference userRef =
-            firestore.collection("users").doc(user?.uid);
-        if (user != null) {
-          await userRef.set({
-            'username': user.displayName,
-            'email': user.email,
-            'password': null,
-            "token": user.uid,
-          });
-        }
-      }
-    } catch (e) {
-      showToast(message: "$e ");
-    }
-  }
+  //       final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  //       final DocumentReference userRef =
+  //           firestore.collection("users").doc(user?.uid);
+  //       if (user != null) {
+  //         await userRef.set({
+  //           'username': user.displayName,
+  //           'email': user.email,
+  //           'password': null,
+  //           "token": user.uid,
+  //         });
+  //       }
+  //     }
+  //   } catch (e) {
+  //     showToast(message: "$e ");
+  //   }
+  // }
 }

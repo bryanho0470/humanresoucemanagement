@@ -34,7 +34,7 @@ class _LandingScreenState extends State<LandingPage> {
 
   final List<Widget> pageList = <Widget>[
     const SharingPage(),
-    const DashboardPage(),
+    const ChatScreen(),
   ];
 
   void _exitAppDialog() {

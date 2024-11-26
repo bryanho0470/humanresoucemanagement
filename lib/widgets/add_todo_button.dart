@@ -49,7 +49,7 @@ const String _heroAddTodo = "add-todo-hero";
 /// {@endtemplate}
 
 class _AddTodoPopupCard extends StatelessWidget {
-  const _AddTodoPopupCard({super.key});
+  const _AddTodoPopupCard();
 
   @override
   Widget build(BuildContext context) {

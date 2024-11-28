@@ -43,6 +43,8 @@ dependencies:
   firebase_auth: ^5.2.1
   cloud_firestore: ^5.4.1
   google_fonts: ^6.2.1
+  http: ^1.2.2
+  flutter_dotenv: ^5.2.1
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +70,7 @@ flutter:
   assets:
     - assets/images/nk-logo.jpeg
     - assets/images/person/
+    - .env
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:humanresoucemanagement/global/common/fluttertoast.dart';
 import 'package:humanresoucemanagement/global/common/hero_dialog_route.dart';
+import 'package:humanresoucemanagement/pages/ai_chat_page.dart';
 import 'package:humanresoucemanagement/pages/dashboard_page.dart';
 import 'package:humanresoucemanagement/pages/notification_summary.dart';
 import 'package:humanresoucemanagement/pages/sharing_page.dart';
@@ -34,7 +35,8 @@ class _LandingScreenState extends State<LandingPage> {
 
   final List<Widget> pageList = <Widget>[
     const SharingPage(),
-    const DashboardPage(),
+    // const DashboardPage(),
+    AiChatPage(),
   ];
 
   void _exitAppDialog() {

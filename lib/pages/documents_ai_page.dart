@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:humanresoucemanagement/models/chat_model.dart';
+import 'package:file_picker/file_picker.dart';
 
-class AiChatPage extends StatefulWidget {
+class DocumentsAiPage extends StatefulWidget {
+  const DocumentsAiPage({super.key});
+
   @override
-  _AiChatPageState createState() => _AiChatPageState();
+  _DocumentsAiPageState createState() => _DocumentsAiPageState();
 }
 
-class _AiChatPageState extends State<AiChatPage> {
+class _DocumentsAiPageState extends State<DocumentsAiPage> {
   final TextEditingController _controller = TextEditingController();
   final List<String> _messages = [];
   final ChatService _chatService = ChatService();
@@ -24,10 +27,20 @@ class _AiChatPageState extends State<AiChatPage> {
     });
   }
 
+  void _pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    if (result != null && result.files.isNotEmpty) {
+      final file = result.files.first;
+      setState(() {
+        _messages.add('User: File selected: ${file.name}');
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('AI Chat')),
+      appBar: AppBar(title: const Text('AI Chat')),
       body: Column(
         children: [
           Expanded(
@@ -41,21 +54,29 @@ class _AiChatPageState extends State<AiChatPage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(10.0),
             child: Row(
               children: [
+                IconButton(
+                  onPressed: _pickFile,
+                  icon: const Icon(Icons.attach_file),
+                ),
                 Expanded(
                   child: TextField(
                     controller: _controller,
-                    decoration: InputDecoration(hintText: 'Type a message'),
+                    decoration:
+                        const InputDecoration(hintText: 'Type a message'),
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.send),
+                  icon: const Icon(Icons.send),
                   onPressed: _sendMessage,
                 ),
               ],
             ),
+          ),
+          const SizedBox(
+            height: 50,
           ),
         ],
       ),
